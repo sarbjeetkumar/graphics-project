@@ -6,6 +6,7 @@
     <title>SnakeGame</title>
 
     <style type="text/css">
+       
       canvas {
         border: 2px solid Black; 
       }
@@ -15,7 +16,7 @@
     
     <body>
         
-        <canvas id="canvas-for-snake"  > </canvas>
+        <canvas id="canvas-for-snake" width="450" height="450"  > </canvas>
         
         <script type="text/javascript">
             
@@ -23,12 +24,22 @@
             //2- Give it a colour
             //3 - Draw the snake 
             //4- Move the snake 
-            //5- Produce the fruit 
+            //5- Produce the food 
             //6 - Make the snake bigger after eating the fruits and produce again 
-            //7 - check the collisions if it eats itself or collied with wall game over 
+            //7 - check the collisions if it eats itself or collied with the canvas -> game over 
             //8 -add the Score bar 
-            //9 - check the collisions if any collisions Game over 
+            //9 - increment the score every time snake eat th food
             //10 - comment all the code .
+            
+            //Variables
+            var snakeSize = 5 ; 
+            var snake ;
+            var direction;
+            var food ;
+            var score;
+            var w = 450;
+            var h = 450;
+           
             
             
             // Gets a handle to the element with id canvasOne. 
@@ -36,10 +47,123 @@
             
             // Get a 2D context for the canvas.
             var ctx = canvas.getContext("2d");
-             canvas.height = 400;
-             canvas.width = 600;
-    
-    
+            
+            
+            init();
+            //init function
+            function init(){
+              direction = 'down';
+                console.log();
+                make_snake();
+                create_food();
+                
+            }// init finish here 
+           
+            //draw the snake on the canvas 
+            var snakeBody = function(x,y){
+                ctx.fillStyle = 'green';
+                ctx.fillRect(x*snakeSize, y*snakeSize, snakeSize, snakeSize);
+                ctx.strokeStyle = 'darkgreen';
+                ctx.strokeRect(x*snakeSize, y*snakeSize, snakeSize, snakeSize);
+
+            }// SnakeBody Finish Here 
+            
+            //make the snake 
+              function make_snake(){
+                //start with empty array 
+                snake = [];
+                snakeSize = 5;
+                for(var i =snakeSize-1;i>=0;i--){
+                    //This will create a horizontal snake starting from the top left
+                    snake.push({x:i , y:0});
+                }//for ends here 
+                
+            }//Make Snake Ends Here 
+           
+           //create food 
+            //In this fuction select the random position on the canvas to create the food for snake 
+            function create_food(){
+                food = {
+                        x:Math.floor((Math.random() * 30) + 1),   
+                        y:Math.floor((Math.random() *30 ) +1),
+                }
+                        
+                for(var i = 0;i<snake.length;i++)
+                {
+                    var sankeX = snake[i].x;
+                    var snakeY = snake[y].y;
+                    
+                        if(food.x == snakeX && food.y == snakeY ||  food.y == snakeY && food.x == snake.X ){
+                        food.x = MAth.floor((Math.random()* 30)+1);
+                        food.y = Math.floor((Math.random()*30)+1);
+                            
+                    }//if ends Here
+                    
+                }//For Finish here 
+                
+                
+            }//Function create food finish here
+            
+            
+            //paint snake fucntion start here  
+           function paint_snake(){
+               //give it a colour light blue 
+               ctx.fillStyle = 'lightBlue';
+               ctx.fillRect(0,0,w,h);
+               ctx.stroke =  'black';
+               ctx.strokeRect(0,0,w,h);
+               
+               
+               //Postion of the snake 
+               var snakeVX = snake[0].x;
+               var snakeVY = snake[0].y;
+               
+               //get the direction on the movement of the snake 
+               if(direction == 'right'){
+                   snakeVX++;
+               }
+               else if(direction == 'left'){
+                   snakeVX--;
+               }
+               else if(direction == 'up'){
+                   snakeVY++;
+               }
+               else if(direction == 'down'){
+                   snakeVY--;
+               }
+               
+               //if snake eats him self or touch the wall game over and game will restart again
+                 if(snakeVX == -1 || snakeVX == w/snakeSize || snakeVY == -1 || snakeVY == h/snakeSize || checkColission(snakeVX , snakeVY ,snake)){  
+                   
+                     
+                   ctx.clearRect(0,0,w,h);
+                     init();
+                     //call the init() Method to restart the game 
+                     //return here ;
+                   return ;
+               }// ends here 
+               
+               
+               
+               
+           }//paint the snake fuction ends here 
+            
+
+            //check collision fuction if snake eat himself or bumps into the wall.
+            
+            function checkColission(snakeVX , snakeVY ,snake){
+             //in this fuction check if snake eats himself or bumps into the wall and return 
+                
+               // loop over the snake Array and check for collision
+                
+                for(var i = 0;i<snake.length;i++){
+                    if(snake[i].x == snakeVX && snake[i].y == snakeVY){
+                        return true;
+                        
+                    }//if ends here 
+                    return false;
+                }//for Ends here 
+            }//function check collisions ends here 
     
     
     
