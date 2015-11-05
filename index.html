@@ -22,23 +22,30 @@
         <script type="text/javascript">
             
     
-            var COLS = 20,
-           var  ROWS = 20,
-           var  EMPTY = 0,
-           var SNAKE = 1,
-           var  FOOD = 2,
+           var  COLS = 20;
+           var  ROWS = 20;
+           var  EMPTY = 0;
+           var  SNAKE = 1;
+           var  FOOD = 2;
                
                //directions
-            var LEFT  = 0,
-           var  UP    = 1,
-           var  RIGHT = 2,
-           var  DOWN  = 3,
+           var  LEFT  = 0;
+           var  UP    = 1;
+           var  RIGHT = 2;
+           var  DOWN  = 3;
                
           //key codes for maintaining snake
-           var  KEY_LEFT  = 37,
-           var  KEY_UP    = 38,
-           var  KEY_RIGHT = 39,
-           var  KEY_DOWN  = 40,
+           var  KEY_LEFT  = 37;
+           var  KEY_UP    = 38;
+           var  KEY_RIGHT = 39;
+           var  KEY_DOWN  = 40;
+               
+               
+           var  canvas ; 
+           var  ctx  ;
+           var  keystate; 
+           var  frames  ;
+           var  score;
            
             
             // Gets a handle to the element with id canvasOne. 
@@ -46,6 +53,108 @@
             
             // Get a 2D context for the canvas.
             var ctx = canvas.getContext("2d");
+            
+            //grid object .
+             grid = {
+                 
+                 width : null;
+                 height : null;
+                 _grid : null;
+                 
+                  init : function(direction , c ,r){
+                     this.width = x;
+                     this.height = y;
+                     this._grid = [];
+                     
+                     for(var x = 0;x<c ;x++){
+                         _grid.push([]);
+                         for(var y =0;y<r;y++){
+                            this._grid[x].push(d);
+                             
+                         }//inner for finish here 
+                     }//outer for finish here 
+                 }//init finish here    
+                 
+                set: function(val , x,y){
+                     this._grid[x].[y] = val;
+                 }
+            
+            get: function(x,y){
+            return  this._grid[x].[y];    
+            }
+                   
+            }//grid finish here 
+            
+            
+            
+            
+            //snake object 
+             snake = {
+                direction : null;
+                last: null,
+            	_queue: null, 
+                 
+               init : function(d,x,y){
+                 
+                 this.direction = d;
+                 this._queue = [];
+                 this.insert[x][y];
+               }
+                 
+             //add a element to the queue.
+             insert : function(x,y){
+             this._queue.unshift[x][y];    //unshift method add a item at the front of the queue
+                 this.last = _queue.pop[0];     //getting the item
+             
+             }
+            
+            remove: function(){
+                return this._queue.pop();       //return the last elementof the array                 
+            }
+                 
+                
+            }//snake object 
+            
+            
+            //set the food for the snake at the empty place in the grid which is denoted by CONSTATNT EMPTY=0;
+            
+            setFood function(){
+                
+                //create a empty array 
+                var array = [] ;
+                
+                //loop throgh the grid and check the empty place in the grid
+                //to loop through the grid we need a loop and some variables to check.
+                for(var x =0;x<COLS;x++){
+                    for(var y =0 ;y<ROWS;y++){
+                    //checks where is empty place 
+                        if((grid.get(x,y) == EMPTY)){
+                            array.push({x:x,y:y});   
+                        }
+                    
+                    }//inner for ends here 
+                    
+                }//outer for ends here 
+                
+                // Now find the random empty place in the grid to place the food .
+                //need to use the math.random 
+                
+                var randomPosition = array[Math.floor(Math.random()*(array.length-1))];
+                grid.set(FOOD,randomPosition.x,randomPosition.y);
+                
+            }
+            
+            
+            
+            
+            
+            function main(){
+                
+                
+                
+                
+                
+            }
             
             
     
