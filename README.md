@@ -11,7 +11,7 @@ Where is empty place is denoted by 0
 
 Setting the food for a snake is denoted by setFood method 
 
- function setFood(){
+# function setFood(){
                 
                 //create a empty array 
                 var array = [] ;
@@ -26,7 +26,7 @@ Setting the food for a snake is denoted by setFood method
                         And Math.Random () to select the sandom number and * by empty array to get random place on the grid.
                         
                         
-In the main fuction just create the canvas 
+#In the main fuction just create the canvas 
    function main(){
     
                 //create the canvas 
@@ -51,7 +51,7 @@ and add the event listner to keeptrack on which key is been pressed .on the
 
 after that init()
 
- function init() {
+ #function init() {
                 score = 0;
                 grid.init(EMPTY, COLS, ROWS);
                 var snakePosition = {x:Math.floor(COLS/2), y:ROWS-1};
@@ -108,7 +108,7 @@ the key pressed on the keyboard . Like if pressed the left arrow key and
   
   
   
-collisions 
+#collisions 
 //check the collisions 
                     if (0 > snakeX || snakeX > grid.width-1  || 0 > snakeY || snakeY > grid.height-1 ) {
                         //calls the init function
@@ -120,7 +120,7 @@ collisions
 		  
 		  And Last draw function
 		   
-            function draw(){
+            #function draw(){
                 //calculate the width and height of the cell
                 var cellW = canvas.width/grid.width;
                 var cellH = canvas.height/grid.height;
