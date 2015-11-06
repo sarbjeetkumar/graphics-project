@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html>
 <head>
 	<meta charset="UTF-8">
-	<title>Simple Snake Game</title>
+	<title>Snake Game</title>
 	
-	<!-- Basic styling, centering of the canvas. -->
+	
 	<style>
 	canvas {
 		display: block;
@@ -17,16 +17,14 @@
     
     <body>
         
-        <canvas id="canvas-for-snake" width="450" height="450"  > </canvas>
-        
-        <script type="text/javascript">
+        <script>
             
     
            var  COLS = 20;
            var  ROWS = 20;
            var  EMPTY = 0;
            var  SNAKE = 1;
-           var  FOOD = 2;
+           var  FOOD  = 2;
                
                //directions
            var  LEFT  = 0;
@@ -46,41 +44,34 @@
            var  keystate; 
            var  frames  ;
            var  score;
-           
-            
-            // Gets a handle to the element with id canvasOne. 
-            var canvas = document.getElementById("canvas-for-snake");
-            
-            // Get a 2D context for the canvas.
-            var ctx = canvas.getContext("2d");
             
             //grid object .
              grid = {
                  
-                 width : null;
-                 height : null;
-                 _grid : null;
+                 width : null,
+                 height: null,
+                 _grid: null,
                  
                   init : function(direction , c ,r){
-                     this.width = x;
-                     this.height = y;
+                     this.width = c;
+                     this.height = r;
                      this._grid = [];
                      
                      for(var x = 0;x<c ;x++){
-                         _grid.push([]);
+                         this._grid.push([]);   //push the empty array 
                          for(var y =0;y<r;y++){
-                            this._grid[x].push(d);
+                            this._grid[x].push(direction);
                              
                          }//inner for finish here 
                      }//outer for finish here 
-                 }//init finish here    
+                 },//init finish here    
                  
-                set: function(val , x,y){
-                     this._grid[x].[y] = val;
-                 }
+                	set: function(x,y,value) {
+                        this._grid[x][y] = value;
+                    },
             
-            get: function(x,y){
-            return  this._grid[x].[y];    
+            get: function(x, y){
+            return  this._grid[x][y];    
             }
                    
             }//grid finish here 
@@ -90,23 +81,22 @@
             
             //snake object 
              snake = {
-                direction : null;
+                direction : null,
                 last: null,
             	_queue: null, 
                  
                init : function(d,x,y){
-                 
                  this.direction = d;
                  this._queue = [];
-                 this.insert[x][y];
-               }
+                 this.insert(x,y);
+               },
                  
              //add a element to the queue.
              insert : function(x,y){
-             this._queue.unshift[x][y];    //unshift method add a item at the front of the queue
-                 this.last = _queue.pop[0];     //getting the item
+             this._queue.unshift({x:x,y:y});    //unshift method add a item at the front of the queue
+                 this.last = this._queue[0];     //getting the item
              
-             }
+             },
             
             remove: function(){
                 return this._queue.pop();       //return the last elementof the array                 
@@ -118,19 +108,19 @@
             
             //set the food for the snake at the empty place in the grid which is denoted by CONSTATNT EMPTY=0;
             
-            setFood function(){
+            function setFood(){
                 
                 //create a empty array 
                 var array = [] ;
                 
                 //loop throgh the grid and check the empty place in the grid
                 //to loop through the grid we need a loop and some variables to check.
-                for(var x =0;x<COLS;x++){
-                    for(var y =0 ;y<ROWS;y++){
+                for(var x =0;x<grid.width;x++){
+                    for(var y =0 ;y<grid.height;y++){
                     //checks where is empty place 
-                        if((grid.get(x,y) == EMPTY)){
-                            array.push({x:x,y:y});   
-                        }
+                        if(grid.get(x,y) === EMPTY){ //Empty represents the 0 in the grid columns               
+                            array.push({x:x,y:y});                  
+                        }                                           
                     
                     }//inner for ends here 
                     
@@ -142,26 +132,194 @@
                 var randomPosition = array[Math.floor(Math.random()*(array.length-1))];
                 grid.set(FOOD,randomPosition.x,randomPosition.y);
                 
-            }
+            }//set food ends here
             
-            
-            
-            
+           
             
             function main(){
+    
+                //create the canvas 
+                canvas = document.createElement("canvas");
+                canvas.width = COLS*20;
+                canvas.height = ROWS*20;
+                ctx = canvas.getContext("2d");
+                //canvas element added to the body
+                document.body.appendChild(canvas);
+                ctx.font = "12px Helvetica";
+                frames = 0;
+                keystate = {}; //empty object
+                
+                	// sets an base font for bigger score display
+	                ctx.font = "12px Helvetica";
+                
+                // keeps track of the keybourd input
+                document.addEventListener("keydown", function(evt) {
+                    keystate[evt.keyCode] = true;
+                });
+                document.addEventListener("keyup", function(evt) {
+                    delete keystate[evt.keyCode];
+                });
+
+                //start the game and initilize the game objects
+                init();
+	            loop();
                 
                 
-                
-                
-                
-            }
+            }//main ends here
+            
+            //for updates in the game
+            function loop() {
+                //calls the updates and draw function
+                update();
+                draw();
+               
+                window.requestAnimationFrame(loop, canvas);
+            }//loop function ends here 
+            
+        
+            
+            //resets the game
+            
+            function init() {
+                score = 0;
+                grid.init(EMPTY, COLS, ROWS);
+                var snakePosition = {x:Math.floor(COLS/2), y:ROWS-1};
+                snake.init(DOWN, snakePosition.x, snakePosition.y);
+                grid.set(SNAKE, snakePosition.x, snakePosition.y);
+                setFood();
+            }//init ends here 
             
             
-    
-    
-        </script>
-    
+            
+            
+            //update function 
+            function update(){
+                frames++;
+                
+                //***************************************
+                //accorrding to the key which is pressed . 
+                //***************************************
+                
+                    switch(keystate){  
+                            
+                        case KEY_LEFT: 
+                          if (snake.direction !== RIGHT) {
+                           snake.direction = LEFT;
+                          }
+                          break;
+
+                        case KEY_RIGHT:
+                          if (snake.direction !== LEFT) {
+                          snake.direction = RIGHT;
+                          }
+                          break;
+
+                        case KEY_UP:
+                          if (snake.direction !== DOWN) {
+                          snake.direction = UP;
+                          }
+                          break;
+
+                        case KEY_DOWN:
+                          if (snake.direction !== UP) {
+                          snake.direction = DOWN;
+                          }
+                          break;
+                            
+                    }//switch ends here 
+                
+                if(frames%5 ==0){
+                    
+                    var snakeX = snake.last.x;
+                    var snakeY = snake.last.y;
+                    
+                    if (snake.direction === UP) { 
+                        snakeY--;
+                    }
+                    else if (snake.direction === LEFT) { 
+                       snakeX--; 
+                    }
+                    else if (snake.direction === RIGHT) { 
+                       snakeX++; 
+                    } 
+                    else if(snake.direction === DOWN) { 
+                        snakeY++; 
+                    }
+                    
+                    
+                    //check the collisions 
+                    if (0 > snakeX || snakeX > grid.width-1  || 0 > snakeY || snakeY > grid.height-1 ) {
+                        //calls the init function
+			           return init();
+		            }
+                    
+                    
+                    // check wheter the new position are on the food item
+                    if (grid.get(snakeX, snakeY) === FOOD) {
+                        // increment the score and sets a new food position
+                        score++;
+                        setFood();  //set the food again
+                    } else {
+                        // take out the first item from the snake queue i.e
+                        // the tail and remove 
+                        var tail = snake.remove();
+                        grid.set(EMPTY, tail.X, tail.y);
+                    }
+                    // add a snake position at the new position and append it to 
+                    // the snake queue
+                    grid.set(SNAKE, snakeX, snakeY);
+                    snake.insert(snakeX, snakeY);    
+                }//if ends here 
+                
+            }//update function ends here
+            
+   
+            
+            //draw function draw on the canvas
+            
+            function draw(){
+                //calculate the width and height of the cell
+                var cellW = canvas.width/grid.width;
+                var cellH = canvas.height/grid.height;
+                
+                //give all those cell a colour 
+                //first loop over the grid 
+                //need 2 for loops for looping over the grid
+                
+                for(var x=0;x<grid.width;x++){
+                    for(var y = 0;y<grid.height;y++){
+                        // sets the fillstyle depending on the id of
+                        //Means If == SNAKE then colour 
+                        //if == FOOD give it a diifrent colour 
+                        //if == EMPTY give it a diffrent colour
+                        //we need some if conditions to do that 
+                        //some ctx.fillRect
+                        if(grid.get(x, y) === EMPTY){
+                           ctx.fillStyle = "#0ff"; 
+                        }
+		                
+                        else if(grid.get(x, y) === SNAKE){
+                           ctx.fillStyle = "#000"; 
+                        }
+		
+                        else if(grid.get(x, y)=== FOOD){
+                           ctx.fillStyle = "#0f0"; 
+                        }
+		
+                        ctx.fillRect(x*cellW, y*cellH, cellW, cellH);
+                    }//inner loop finish here 
+                }//outer loop finish here 
+                
+                // fillstyle to draws the score
+                // score display on canvas
+                ctx.fillStyle = "#000";
+                ctx.fillText("SCORE: " + score, 20, canvas.height-20);
+                
+                
+                
+            }//draw ends here
+            
+            main();
+        </script>    
     </body>
-
-
 </html>
