@@ -118,9 +118,9 @@ the key pressed on the keyboard . Like if pressed the left arrow key and
 		  This part of the game isnt working fine because of that my whole game isnt working fine 
 		  i was trying to fix it but could't do.
 		  
-		  And Last draw function
+#draw function
 		   
-            #function draw(){
+            function draw(){
                 //calculate the width and height of the cell
                 var cellW = canvas.width/grid.width;
                 var cellH = canvas.height/grid.height;
